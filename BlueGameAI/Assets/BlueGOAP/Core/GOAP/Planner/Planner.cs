@@ -61,13 +61,14 @@ namespace BlueGOAP
             {
                 //获取所有的子行为
                 var handlers = GetSubHandlers(currentNode);
-                DebugMsg.Log("---------------currentNode:" + currentNode.ID + "-----------------");
-                foreach (IActionHandler<TAction> handler in handlers)
-                {
-                    DebugMsg.Log("计划子行为:" + handler.Label + "  优先级：" + handler.Action.Priority);
-                }
-
-                DebugMsg.Log("--------------------------------");
+//                DebugMsg.Log("---------------currentNode:" + currentNode.ID + "-----------------");
+//                foreach (IActionHandler<TAction> handler in handlers)
+//                {
+//                    DebugMsg.Log("计划子行为:" + handler.Label + "  优先级：" + handler.Action.Priority);
+//                }
+//
+//                DebugMsg.Log("--------------------------------");
+                //创建节点并且进行节点最优选择
                 foreach (IActionHandler<TAction> handler in handlers)
                 {
                     subNode = tree.CreateNode(handler);
@@ -133,11 +134,11 @@ namespace BlueGOAP
         {
             if (subNode.ID > TreeNode<TAction>.DEFAULT_ID)
             {
-                IAction<TAction> subAction = subNode.ActionHandler.Action;
+                var subAction = subNode.ActionHandler.Action;
                 //首先复制当前节点的状态
                 subNode.CopyState(currentNode);
                 //查找action的effects，和goal中也存在
-                IState data = subNode.GoalState.GetSameData(subAction.Effects);
+                var data = subNode.GoalState.GetSameData(subAction.Effects);
                 //那么就把这个状态添加到节点的当前状态中
                 subNode.CurrentState.Set(data);
                 //把action的先决条件存在goalState中不存在的键值添加进去
@@ -184,7 +185,7 @@ namespace BlueGOAP
         /// <returns></returns>
         private List<IActionHandler<TAction>> GetSubHandlers(TreeNode<TAction> node)
         {
-            List<IActionHandler<TAction>> handlers = new List<IActionHandler<TAction>>();
+            var handlers = new List<IActionHandler<TAction>>();
             if (node == null)
                 return handlers;
             //获取状态差异

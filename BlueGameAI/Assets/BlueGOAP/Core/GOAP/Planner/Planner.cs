@@ -18,10 +18,10 @@ namespace BlueGOAP
             DebugMsg.Log("---------------当前代理状态------------");
             DebugMsg.Log(agent.AgentState.ToString());
             DebugMsg.Log("---------------------------");
-            Queue<IActionHandler<TAction>> plan = new Queue<IActionHandler<TAction>>();
+            var plan = new Queue<IActionHandler<TAction>>();
             if (goal == null)
                 return plan;
-            TreeNode<TAction> currentNode = Plan(goal);
+            var currentNode = Plan(goal);
             if (currentNode == null)
             {
                 plan.Enqueue(agent.ActionManager.GetHandler(agent.ActionManager.GetDefaultActionLabel()));
@@ -61,14 +61,6 @@ namespace BlueGOAP
             {
                 //获取所有的子行为
                 var handlers = GetSubHandlers(currentNode);
-//                DebugMsg.Log("---------------currentNode:" + currentNode.ID + "-----------------");
-//                foreach (IActionHandler<TAction> handler in handlers)
-//                {
-//                    DebugMsg.Log("计划子行为:" + handler.Label + "  优先级：" + handler.Action.Priority);
-//                }
-//
-//                DebugMsg.Log("--------------------------------");
-                //创建节点并且进行节点最优选择
                 foreach (IActionHandler<TAction> handler in handlers)
                 {
                     subNode = tree.CreateNode(handler);

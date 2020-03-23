@@ -36,7 +36,7 @@ namespace BlueGOAP
             }
 
             DebugMsg.Log("---------------最终生成计划------------");
-            foreach (IActionHandler<TAction> handler in plan)
+            foreach (var handler in plan)
             {
                 DebugMsg.Log("计划项：" + handler.Label);
             }
@@ -50,21 +50,20 @@ namespace BlueGOAP
 
         private TreeNode<TAction> Plan(IGoal<TGoal> goal)
         {
-            Tree<TAction> tree = new Tree<TAction>();
+            var tree = new Tree<TAction>();
             //初始化树的头节点
-            TreeNode<TAction> topNode = CreateTopNode(tree, goal);
+            var topNode = CreateTopNode(tree, goal);
             //获取最优节点
             TreeNode<TAction> cheapestNode = null;
-            TreeNode<TAction> currentNode = topNode;
-            TreeNode<TAction> subNode = null;
+            var currentNode = topNode;
             while (!IsEnd(currentNode))
             {
                 //获取所有的子行为
                 var handlers = GetSubHandlers(currentNode);
                 foreach (IActionHandler<TAction> handler in handlers)
                 {
-                    subNode = tree.CreateNode(handler);
-                    SetNodeState(currentNode, subNode);
+                    var subNode = tree.CreateNode(handler);
+//                    SetNodeState(currentNode, subNode);
                     subNode.Cost = GetCost(subNode);
                     subNode.ParentNode = currentNode;
                     cheapestNode = GetCheapestNode(subNode, cheapestNode);
@@ -86,29 +85,29 @@ namespace BlueGOAP
             return topNode;
         }
 
-        private TreeNode<TAction> GetCheapestNode(TreeNode<TAction> nodeA, TreeNode<TAction> nodeB)
+        private TreeNode<TAction> GetCheapestNode(TreeNode<TAction> left, TreeNode<TAction> right)
         {
-            if (nodeA == null || nodeA.ActionHandler == null)
-                return nodeB;
-            if (nodeB == null || nodeB.ActionHandler == null)
-                return nodeA;
-            if (nodeA.Cost > nodeB.Cost)
+            if (left == null || left.ActionHandler == null)
+                return right;
+            if (right == null || right.ActionHandler == null)
+                return left;
+            if (left.Cost > right.Cost)
             {
-                return nodeB;
+                return right;
             }
-            else if (nodeA.Cost < nodeB.Cost)
+            else if (left.Cost < right.Cost)
             {
-                return nodeA;
+                return left;
             }
             else
             {
-                if (nodeA.ActionHandler.Action.Priority > nodeB.ActionHandler.Action.Priority)
+                if (left.ActionHandler.Action.Priority > right.ActionHandler.Action.Priority)
                 {
-                    return nodeA;
+                    return left;
                 }
                 else
                 {
-                    return nodeB;
+                    return right;
                 }
             }
         }
@@ -159,10 +158,10 @@ namespace BlueGOAP
 
         private int GetCost(TreeNode<TAction> node)
         {
-            int actionCost = 0;
+            int configCost = 0;
             if (node.ActionHandler != null)
-                actionCost = node.ActionHandler.Action.Cost;
-            return node.Cost + GetStateDifferecnceNum(node) + actionCost;
+                configCost = node.ActionHandler.Action.Cost;
+            return node.Cost + configCost + GetStateDifferecnceNum(node);
         }
 
         private int GetStateDifferecnceNum(TreeNode<TAction> node)
@@ -181,9 +180,9 @@ namespace BlueGOAP
             if (node == null)
                 return handlers;
             //获取状态差异
-            var keys = node.CurrentState.GetValueDifferences(node.GoalState);
+            var currkeys = node.CurrentState.GetValueDifferences(node.GoalState);
             var map = agent.ActionManager.EffectsAndActionMap;
-            foreach (string key in keys)
+            foreach (string key in currkeys)
             {
                 if (map.ContainsKey(key))
                 {

@@ -48,7 +48,7 @@ namespace BlueGOAP
             _onComplete = onComplete;
         }
 
-        public void NextAction()
+        public void HandlerAction()
         {
             if (IsComplete)
             {

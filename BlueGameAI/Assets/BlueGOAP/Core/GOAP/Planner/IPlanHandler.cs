@@ -21,7 +21,7 @@ namespace BlueGOAP
         /// <summary>
         /// 执行下一个动作
         /// </summary>
-        void NextAction();
+        void HandlerAction();
 
         /// <summary>
         /// 中断计划

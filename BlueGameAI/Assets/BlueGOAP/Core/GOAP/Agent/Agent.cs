@@ -40,13 +40,10 @@ namespace BlueGOAP
         {
             if (IsAgentOver)
                 return;
-
             if (ActionManager != null)
                 ActionManager.UpdateData();
-
             if (GoalManager != null)
                 GoalManager.UpdateData();
-
             Performer.UpdateData();
         }
 

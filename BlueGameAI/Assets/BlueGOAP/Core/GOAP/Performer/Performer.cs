@@ -24,7 +24,7 @@
                 //计划完成了当前动作
                 DebugMsg.Log("下一步");
                 if (planHandler.GetCurrentHandler().Label.ToString() == actionLabel.ToString())
-                    planHandler.NextAction();
+                    planHandler.HandlerAction();
             });
         }
 
@@ -48,7 +48,7 @@
                 if (plan != null && plan.Count > 0)
                 {
                     planHandler.Init(actionManager, plan);
-                    planHandler.NextAction();
+                    planHandler.HandlerAction();
                     actionManager.IsPerformAction = true;
                 }
             }
